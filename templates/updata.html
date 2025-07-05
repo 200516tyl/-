@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成绩修改</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(156, 39, 176, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #9C27B0 0%, #ff4ded 100%);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-container {
+            padding: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E1BEE7;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #9C27B0;
+            box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.2);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #9C27B0 0%, #ff4ded 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+        }
+
+        .flash-messages {
+            margin-bottom: 1rem;
+        }
+
+        .flash-message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .flash-message.error {
+            background-color: #FFEBEE;
+            color: #C62828;
+            border: 1px solid #FFCDD2;
+        }
+
+        .flash-message.success {
+            background-color: #E8F5E9;
+            color: #2E7D32;
+            border: 1px solid #C8E6C9;
+        }
+
+        .current-scores {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(156, 39, 176, 0.05);
+            border-radius: 8px;
+        }
+
+        .current-scores h2 {
+            color: #9C27B0;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .scores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .score-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .score-item label {
+            display: block;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-item span {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 12px;
+            }
+
+            .header {
+                padding: 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .form-container {
+                padding: 1.5rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>成绩修改</h1>
+        </div>
+
+        <div class="form-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash-message {{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% if score %}
+            <form action="{{ url_for('updata') }}" method="post">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="id">学号</label>
+                        <input type="text" id="id" name="id" value="{{ score.id }}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name">姓名</label>
+                        <input type="text" id="name" name="name" value="{{ score.name }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="chinese">语文成绩</label>
+                        <input type="number" id="chinese" name="chinese" value="{{ score.chinese }}" min="0" max="100" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="math">数学成绩</label>
+                        <input type="number" id="math" name="math" value="{{ score.math }}" min="0" max="100" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="english">英语成绩</label>
+                        <input type="number" id="english" name="english" value="{{ score.english }}" min="0" max="100" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="major">专业课成绩</label>
+                        <input type="number" id="major" name="major" value="{{ score.major }}" min="0" max="100" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">保存修改</button>
+            </form>
+            {% endif %}
+
+            {% if scores %}
+            <div class="current-scores">
+                <h2>当前成绩列表</h2>
+                <div class="scores-grid">
+                    {% for score in scores %}
+                    <div class="score-item">
+                        <label>学号: {{ score.id }}</label>
+                        <label>姓名: {{ score.name }}</label>
+                        <label>语文: {{ score.chinese }}</label>
+                        <label>数学: {{ score.math }}</label>
+                        <label>英语: {{ score.english }}</label>
+                        <label>专业课: {{ score.major }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
