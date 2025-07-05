@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生信息查询</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(156, 39, 176, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .search-form {
+            padding: 2.5rem;
+            background: linear-gradient(135deg, #9C27B0 0%, #ff4ded 100%);
+            position: relative;
+        }
+
+        .search-form::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: #9C27B0;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+        }
+
+        .form-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            padding: 12px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(156, 39, 176, 0.1);
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #BA68C8;
+            box-shadow: 0 0 0 3px rgba(186, 104, 200, 0.2);
+            transform: scale(1.02);
+        }
+
+        input::placeholder {
+            color: #666;
+            opacity: 0.8;
+        }
+
+        button {
+            padding: 12px 32px;
+            background: linear-gradient(135deg, #9C27B0 0%, #ff4dde 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(156, 39, 176, 0.4);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #9C27B0 0%, #ff4de4 100%);
+        }
+
+        th {
+            padding: 18px;
+            color: white;
+            font-weight: 700;
+            position: relative;
+        }
+
+        th:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 60%;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        td {
+            padding: 16px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: background 0.2s ease;
+        }
+
+        tbody tr {
+            transition: transform 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(243, 229, 245, 0.6);
+            transform: translateX(8px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 12px;
+            }
+
+            .search-form {
+                padding: 1.5rem;
+            }
+
+            .form-group {
+                grid-template-columns: 1fr;
+            }
+
+            th, td {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="search-form">
+            <h2 style="margin: 0 0 1.5rem 0; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">学生信息查询</h2>
+            <form action="{{ url_for('tercher_sele') }}" method="get">
+                <div class="form-group">
+                    <input type="text" id="student_name" name="student_name" placeholder="输入姓名查询">
+                    <input type="text" id="student_id" name="student_id" placeholder="输入学号查询">
+                    <button type="submit">🔍 查询</button>
+                </div>
+            </form>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>学号</th>
+                    <th>姓名</th>
+                    <th>班级</th>
+                    <th>性别</th>
+                    <th>电话</th>
+                    <th>寝室</th>
+                    <th>年龄</th>
+                    <th>住址</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in student_score %}
+                <tr>
+                    <td>{{ s.student_id }}</td>
+                    <td>{{ s.student_name }}</td>
+                    <td>{{ s.student_class }}</td>
+                    <td>{{ s.gender }}</td>
+                    <td>{{ s.student_phone }}</td>
+                    <td>{{ s.student_bedroom }}</td>
+                    <td>{{ s.student_age }}</td>
+                    <td>{{ s.student_address }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
