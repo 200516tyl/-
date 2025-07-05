@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智慧教育平台 - 选择入口</title>
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #e6a8ff 0%, #ffb6f5 100%);
+            font-family: 'Helvetica Neue', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(180, 70, 200, 0.2);
+            width: 420px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #5a327c;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .button-group a {
+            text-decoration: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .student-btn {
+            background: linear-gradient(45deg, #c254ff, #ff68f5);
+            color: white;
+        }
+
+        .teacher-btn {
+            background: linear-gradient(45deg, #6d71e8, #a78bfa);
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(180, 70, 200, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>欢迎使用智慧教育平台</h1>
+        <div class="button-group">
+            <a href="{{ url_for('login') }}">
+                <button class="student-btn">学生入口</button>
+            </a>
+            <a href="{{ url_for('teacher_register') }}">
+                <button class="teacher-btn">教师入口</button>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
