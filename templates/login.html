@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智慧教育平台</title>
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #e6a8ff 0%, #ffb6f5 100%);
+            font-family: 'Helvetica Neue', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            top: -20%;
+            right: -10%;
+            z-index: 0;
+            filter: blur(10px);
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(180, 70, 200, 0.2);
+            width: 420px;
+            position: relative;
+            z-index: 1;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(180, 70, 200, 0.25);
+        }
+
+        .role-switch {
+            display: flex;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .role-switch::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(216, 91, 37, 0.1);
+        }
+
+        .role-switch button {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background: rgba(220, 100, 200, 0.1);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #8844aa;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .role-switch button.active {
+            background: linear-gradient(45deg, #c254ff, #ff68f5);
+            color: white;
+            box-shadow: 0 4px 15px rgba(180, 70, 200, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .login-form {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+        }
+
+        .login-form.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h2 {
+            text-align: center;
+            color: #5a327c;
+            margin: 0 0 2rem;
+            font-size: 1.8rem;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #c254ff, #ff68f5);
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(180, 70, 200, 0.2);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #6a448c;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e6cfff;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #faf7ff;
+            color: #5a327c;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #c254ff;
+            background: white;
+            box-shadow: 0 4px 12px rgba(180, 70, 200, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .button-group button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button-group button[type="submit"] {
+            background: linear-gradient(45deg, #c254ff, #ff68f5);
+            color: white;
+            box-shadow: 0 4px 15px rgba(180, 70, 200, 0.3);
+        }
+
+        .button-group button[type="submit"]::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(45deg);
+            transition: all 0.6s;
+        }
+
+        .button-group button[type="submit"]:hover::after {
+            left: 150%;
+            top: 150%;
+        }
+
+        .button-group button[type="submit"]:hover {
+            box-shadow: 0 6px 20px rgba(180, 70, 200, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .button-group button[type="button"] {
+            background: transparent;
+            border: 2px solid #c254ff;
+            color: #c254ff;
+        }
+
+        .button-group button[type="button"]:hover {
+            background: rgba(194, 84, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .flash-message {
+            display: none;
+            padding: 12px;
+            margin: 1.5rem 0;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            animation: slideIn 0.3s ease-out;
+            border-width: 2px;
+            border-style: solid;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .flash-success {
+            background: rgba(200, 255, 210, 0.2);
+            color: #7a286a;
+            border-color: #c254ff;
+        }
+
+        .flash-error {
+            background: rgba(255, 200, 220, 0.2);
+            color: #7a286a;
+            border-color: #ff68f5;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 90%;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="role-switch">
+            <button class="active">学生登录</button>
+            <button>教师登录</button>
+        </div>
+
+        <form class="login-form active" method="POST">
+            <h2>学生登录</h2>
+            <div class="input-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="button-group">
+                <button type="submit">登录</button>
+                <a href="{{ url_for('register') }}">
+                    <button type="button">注册</button>
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
