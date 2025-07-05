@@ -56,6 +56,15 @@ python app.py
     ├── index.html     # 主页面
     ├── login.html     # 登录页面
     └── register.html  # 注册页面
+    └── oerder.html    # 排序页面
+    └── teacher_index.html  # 教师端主界面
+    └── teacher_register.html  # 教师端注册界面
+    └── teacher_score.html  # 教师端成绩录入 
+    └── teacher_score_register.html # 教师端成绩管理
+    └── updata.html #教师端成绩修改
+    └── score_chart.html #数据可视化
+
+
 ```
 
 ## 数据库结构
