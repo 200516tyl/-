@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成绩统计图表</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(156, 39, 176, 0.1);
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #9C27B0;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 60vh;
+            width: 100%;
+        }
+
+        .chart-wrapper {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-title {
+            text-align: center;
+            color: #6A1B9A;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .chart-container {
+                height: 50vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>学生成绩统计分析</h1>
+        
+        <div class="chart-wrapper">
+            <h2 class="chart-title">各科目成绩分布</h2>
+            <div class="chart-container">
+                <canvas id="scoreChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-wrapper">
+            <h2 class="chart-title">平均分对比</h2>
+            <div class="chart-container">
+                <canvas id="averageChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 从后端获取数据并处理
+        fetch('/get_score_data')
+            .then(response => response.json())
+            .then(data => {
+                // 处理成绩分布图表
+                const scoreCtx = document.getElementById('scoreChart').getContext('2d');
+                new Chart(scoreCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['语文', '数学', '英语', '专业课'],
+                        datasets: [{
+                            label: '平均分',
+                            data: data.averages,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.5)',
+                                'rgba(54, 162, 235, 0.5)',
+                                'rgba(255, 206, 86, 0.5)',
+                                'rgba(75, 192, 192, 0.5)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: '各科目平均分'
+                            }
+                        }
+                    }
+                });
+
+                // 处理平均分对比图表
+                const averageCtx = document.getElementById('averageChart').getContext('2d');
+                new Chart(averageCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['语文', '数学', '英语', '专业课'],
+                        datasets: [{
+                            label: '班级平均分',
+                            data: data.averages,
+                            fill: true,
+                            backgroundColor: 'rgba(156, 39, 176, 0.2)',
+                            borderColor: 'rgba(156, 39, 176, 1)',
+                            pointBackgroundColor: 'rgba(156, 39, 176, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(156, 39, 176, 1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        elements: {
+                            line: {
+                                borderWidth: 3
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: '成绩雷达图'
+                            }
+                        }
+                    }
+                });
+            });
+    </script>
+</body>
+</html>
