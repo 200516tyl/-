@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成绩排名</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(156, 39, 176, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .header {
+            padding: 2rem;
+            background: linear-gradient(135deg, #9C27B0 0%, #ff4ded 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .sort-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sort-button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            background: white;
+            color: #9C27B0;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(156, 39, 176, 0.2);
+        }
+
+        .sort-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        thead {
+            background: rgba(156, 39, 176, 0.1);
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            color: #9C27B0;
+            font-weight: 700;
+            border-bottom: 2px solid rgba(156, 39, 176, 0.2);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        tbody tr {
+            transition: background-color 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(156, 39, 176, 0.05);
+        }
+
+        .rank {
+            font-weight: 700;
+            color: #9C27B0;
+        }
+
+        .score {
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .sort-buttons {
+                flex-wrap: wrap;
+            }
+
+            .sort-button {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 12px;
+            }
+
+            .header {
+                padding: 1.5rem;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>成绩排名统计</h1>
+            <div class="sort-buttons">
+                <a href="{{ url_for('order', order_by='chinese') }}" class="sort-button">语文成绩排名</a>
+                <a href="{{ url_for('order', order_by='math') }}" class="sort-button">数学成绩排名</a>
+                <a href="{{ url_for('order', order_by='english') }}" class="sort-button">英语成绩排名</a>
+                <a href="{{ url_for('order', order_by='major') }}" class="sort-button">专业课成绩排名</a>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>排名</th>
+                    <th>学号</th>
+                    <th>姓名</th>
+                    <th>语文</th>
+                    <th>数学</th>
+                    <th>英语</th>
+                    <th>专业课</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in score %}
+                <tr>
+                    <td class="rank">{{ loop.index }}</td>
+                    <td>{{ s.id }}</td>
+                    <td>{{ s.name }}</td>
+                    <td class="score">{{ s.chinese }}</td>
+                    <td class="score">{{ s.math }}</td>
+                    <td class="score">{{ s.english }}</td>
+                    <td class="score">{{ s.major }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
